@@ -16,3 +16,17 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('/',function(){
+    echo "hello world";
+});
+
+Route::group(['prefix'=>'v1'],function(){
+
+    Route::get('/keys/{keys?}','KeysController@getValues')->name('getValues');
+    Route::post('/keys','KeysController@saveKeys')->name('saveKeys');
+    Route::patch('/keys','KeysController@saveKeys')->name('updateKeys');
+    // Route::post('/keys','KeysController@saveKeys')->name('saveKeys');
+
+});
