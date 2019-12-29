@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+// use Illuminate\Support\Facades\Cache;
 // use Illuminate\Redis\Database as Redis;
 
 
@@ -16,23 +16,14 @@ class KeysController extends Controller
     function __construct()
     {
         $this->redis = Redis::connection();
-        $this->ttl = 120;
+        $this->ttl = 300;
     }
-    
-    function saveKeys(Request $request)
-    {    
-        foreach ($request->input() as $key => $value) {
-            // Redis::set($key,$value);
 
-            // Cache::store('redis')->put($key,$value,120);
-            // Cache::store('redis')->putMany($request->input(),120);
+    function set_ttl(Request $request)
+    {
+        $this->ttl = $request->input('ttl');
 
-            $this->redis->set($key, $value);
-
-            $this->redis->expire($key,$this->ttl); 
-        }
-
-        return $this->send_response('Success',null,200);
+        return $this->send_response('Success',null,201);
     }
 
     function getValues(Request $request)
@@ -44,32 +35,47 @@ class KeysController extends Controller
         }
 
         if (empty( $keys) ) {
-            $message  = "";
-            # code...
+            return $this->send_response('Success',$data,200);
         }
-        // dd( explode() );
-        // $allKeys = $this->redis->keys('*');
-        // $redis = Cache::getRedis();
-
-        // dd($allKeys);
-
-        // $keys  = $redis->keys();
-
-        // $redis = Cache::store('redis')->keys();
-
-        // $redis = Cache::keys();
-    
-        // dd( $keys ) ;
-
+      
         $data = array();
     
         foreach ($keys as $key => $value) {
-           
-            // $data[$key] =  Cache::store('redis')->get($key);
+
             $data[$value] = $this->redis->get($value);
         }
 
-        return $this->send_response('Success',$data,200);
+        return response()->json(
+            array(
+                'data'      =>  $data
+            ),201
+        );
+
+        return $this->send_response('Success',$data,201);
+    }
+
+    function saveValues(Request $request)
+    {    
+        foreach ($request->input() as $key => $value) {
+
+            $this->redis->set($key, $value);
+
+            $this->redis->expire($key,$this->ttl); 
+        }
+
+        return $this->send_response('Success',null,201);
+    }
+    
+    function updateValues(Request $request)
+    {    
+        foreach ($request->input() as $key => $value) {
+
+            $this->redis->set($key, $value);
+
+            $this->redis->expire($key,$this->ttl); 
+        }
+
+        return $this->send_response('Success',null,201);
     }
 
     private function send_response($message,$data,$status = 200){
