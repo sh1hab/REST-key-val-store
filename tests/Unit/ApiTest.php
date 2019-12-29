@@ -7,32 +7,46 @@ use PHPUnit\Framework\TestCase;
 
 class ApiTest extends TestCase
 {
-    
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
 
-    public function testcan_save_values()
+    public function test_can_save_values()
     {
         $response = $this->withHeaders([
             'Content-Type' => 'application/json',
-        ])->json('POST', '/api/v1/values', 
-            [   
+        ])->json('POST', '/values',
+            [
             'name'          => 'Shihab',
             'personality'   =>'Very Good'
             ]
         );
 
+        $response->assertStatus(201);
+    }
+
+    public function test_can_get_values()
+    {
+        $response = $this->withHeaders([
+            'Content-Type' => 'application/json',
+        ])->json('GET', '/values',
+            [
+                'name'          => 'Shihab',
+            ]
+        );
+
         $response
-            ->assertStatus(201)
-            ->assertJson([
-                'data' => true,
-            ]);
+            ->assertStatus(200);
+    }
+
+    public function test_can_update_values()
+    {
+        $response = $this->withHeaders([
+            'Content-Type' => 'application/json',
+        ])->json('PATCH', '/values',
+            [
+                'name'          => 'Shihab',
+                'personality'   =>'Very Good'
+            ]
+        );
+
+        $response->assertStatus(201);
     }
 }
