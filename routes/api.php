@@ -18,15 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/',function(){
-    echo "hello world";
-});
-
 Route::group(['prefix'=>'v1'],function(){
 
-    Route::get('/keys/{keys?}','KeysController@getValues')->name('getValues');
-    Route::post('/keys','KeysController@saveKeys')->name('saveKeys');
-    Route::patch('/keys','KeysController@saveKeys')->name('updateKeys');
+    Route::get('/values/{keys?}','KeysController@getValues')->name('getValues');
+    Route::post('/values','KeysController@saveKeys')->name('saveKeys');
+    Route::patch('/values','KeysController@saveKeys')->name('updateKeys');
     // Route::post('/keys','KeysController@saveKeys')->name('saveKeys');
 
 });
