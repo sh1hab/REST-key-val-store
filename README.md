@@ -24,7 +24,7 @@ Save a value in the store.
 
 ```
 request: {key1: value1, key2: value2..}
-response: {key1: value1, key2: value2..}
+response: {message: Keys set successfully}
 ```
 
 #### PATCH /values
@@ -32,5 +32,5 @@ Update a value in the store.
 
 ```
 request: {key1: value5, key2: value3..}
-response: {key1: value5, key2: value3..}
+response: {message: Keys updated successfully}
 ```
